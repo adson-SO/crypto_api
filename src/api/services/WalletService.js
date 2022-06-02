@@ -10,17 +10,17 @@ class WalletService {
 
         const cpfIsValid = cpfValidate(cpf);
         if(!cpfIsValid) {
-            return new InvalidCpf(cpf);
+            throw new InvalidCpf(cpf);
         }
 
         const cpfExists = await WalletRepository.findCpf(cpf);
         if(cpfExists) {
-            return new DuplicatedCpf(cpf);
+            throw new DuplicatedCpf(cpf);
         }
 
         const isOver18 = ageValidate(birthdate);
         if(!isOver18) {
-            return new IsNotOver18();
+            throw new IsNotOver18();
         }
 
         const wallet = await WalletRepository.create(payload);
