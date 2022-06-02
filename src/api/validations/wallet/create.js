@@ -4,7 +4,7 @@ module.exports = async (req, res, next) => {
     try {
         const schema = Joi.object({
             name: Joi.string().min(7).trim().required(),
-            cpf: Joi.string().trim().required(),
+            cpf: Joi.string().length(11).alphanum().trim().required(),
             birthdate: Joi.date().format('DD/MM/YYYY').raw().required()
         });
 

@@ -1,5 +1,5 @@
 const WalletRepository = require('../repositories/WalletRepository');
-const { cpfValidate, ageValidate } = require('../../helpers');
+const { cpfValidate, ageValidate, formatCpf } = require('../../helpers');
 const InvalidCpf = require('../errors/InvalidCpf');
 const DuplicatedCpf = require('../errors/DuplicatedCpf');
 const IsNotOver18 = require('../errors/isNotOver18');
@@ -23,7 +23,9 @@ class WalletService {
             return new IsNotOver18();
         }
 
-        const result = await WalletRepository.create(payload);
+        const wallet = await WalletRepository.create(payload);
+
+        const result = formatCpf(wallet);
 
         return result;
     }

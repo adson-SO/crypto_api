@@ -79,7 +79,17 @@ const ageValidate = (birthdate) => {
     return true;
 }
 
+const formatCpf = (wallet) => {
+    let { cpf } = wallet;
+
+    cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    const result = Object.assign(wallet, { cpf: cpf });
+
+    return result;
+}
+
 module.exports = {
     cpfValidate,
-    ageValidate
+    ageValidate,
+    formatCpf
 }
