@@ -1,4 +1,4 @@
-module.exports = (cpf) => {
+const cpfValidate = (cpf) => {
     cpf = cpf.replace(/[^\d]+/g, '');
     if (
         cpf.length !== 11 ||
@@ -49,4 +49,37 @@ module.exports = (cpf) => {
     }
 
     return true;
+}
+
+const ageValidate = (birthdate) => {
+    const currentDate = new Date();
+    const birthDate = new Date(birthdate);
+
+    const currentYear = currentDate.getFullYear();
+    const birthYear = birthDate.getFullYear();
+
+    const currentMonth = currentDate.getMonth() + 1;
+    const birthMonth = birthDate.getDate();
+
+    const currentDay = currentDate.getDate();
+    const birthDay = birthDate.getMonth() + 1;
+
+    if(currentYear - birthYear < 18) {
+        return false;
+    }
+
+    if(currentYear - birthYear === 18 && currentMonth - birthMonth < 0) {
+        return false;
+    }
+
+    if(currentMonth === birthMonth && currentDay - birthDay < 0) {
+        return false;
+    }
+
+    return true;
+}
+
+module.exports = {
+    cpfValidate,
+    ageValidate
 }
