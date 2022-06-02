@@ -13,8 +13,8 @@ module.exports = async (req, res, next) => {
         return next();
     } catch (err) {
         return res.status(400).json({
-            description: err.details[0].context.label,
-            name: err.message
+            name: err.details[0].context.label,
+            description: err.message
         });
     }
 }

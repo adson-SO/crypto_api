@@ -6,6 +6,12 @@ class WalletRepository {
         
         return result;
     }
+
+    async findCpf(cpf) {
+        const result = await models.Wallet.findOne({ where: { cpf: cpf } });
+
+        return result;
+    }
 }
 
 module.exports = new WalletRepository();
