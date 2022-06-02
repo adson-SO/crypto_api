@@ -4,13 +4,16 @@ const InvalidCpf = require('../errors/InvalidCpf');
 
 class WalletService {
     async create(payload) {
-        const cpfIsValid = cpfValidate(payload.cpf);
+        const { cpf } = payload;
 
-        if(cpfIsValid === false) {
-            throw new InvalidCpf(payload.cpf);
+        const cpfIsValid = cpfValidate(cpf);
+
+        if(!cpfIsValid) {
+            throw new InvalidCpf(cpf);
         }
 
         const result = await WalletRepository.create(payload);
+
         return result;
     }
 }
