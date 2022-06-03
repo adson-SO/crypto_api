@@ -12,9 +12,14 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Wallet.hasMany(models.Transaction, {
+      Wallet.hasMany(models.Coin, {
         foreignKey: 'walletAddress',
+        as: 'coins',
         onDelete: 'CASCADE'
+      });
+
+      Wallet.hasMany(models.Transaction, {
+        foreignKey: 'walletAddress'
       });
     }
   }
@@ -26,12 +31,19 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    name: DataTypes.STRING,
+    name: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
     cpf: {
+      allowNull: false,
       unique: true,
       type: DataTypes.STRING
     },
-    birthdate: DataTypes.STRING
+    birthdate: {
+      allowNull: false,
+      type: DataTypes.STRING
+    }
   }, {
     sequelize,
     modelName: 'Wallet',

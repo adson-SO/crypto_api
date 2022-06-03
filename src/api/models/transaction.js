@@ -1,7 +1,9 @@
 'use strict';
+
 const {
   Model
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Transaction extends Model {
     /**
@@ -10,24 +12,26 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Transaction.belongsTo(models.Coin, {
-        onDelete: 'CASCADE'
-      });
-      
-      Transaction.belongsTo(models.Wallet, {
-        onDelete: 'CASCADE'
-      });
+      Transaction.belongsTo(models.Coin);
+
+      Transaction.belongsTo(models.Wallet);
     }
   }
+
   Transaction.init({
     value: DataTypes.DOUBLE,
-    datetime: DataTypes.DATE,
+    datetime: {
+      type: DataTypes.DATE,
+      defaultValue: new Date()
+    },
     sendTo: DataTypes.INTEGER,
     receiveFrom: DataTypes.INTEGER,
     currentCotation: DataTypes.DOUBLE
   }, {
     sequelize,
     modelName: 'Transaction',
+    timestamps: false
   });
+
   return Transaction;
 };

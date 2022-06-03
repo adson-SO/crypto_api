@@ -29,6 +29,12 @@ class WalletService {
 
         return result;
     }
+
+    async findAll() {
+        const result = await WalletRepository.findAll();
+
+        return result;
+    }
 }
 
 module.exports = new WalletService();

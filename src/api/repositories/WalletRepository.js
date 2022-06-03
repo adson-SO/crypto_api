@@ -7,6 +7,23 @@ class WalletRepository {
         return result;
     }
 
+    async findAll() {
+        const result = await models.Wallet.findAll({
+            include: { 
+                model: models.Coin, 
+                as: 'coins',
+                attributes: ['coin', 'fullname', 'amount'],
+                include: {
+                    model: models.Transaction,
+                    as: 'transactions',
+                    attributes: ['value', 'datetime', 'sendTo', 'receiveFrom', 'currentCotation']
+                }
+            }
+        });
+
+        return result;
+    }
+
     async findCpf(cpf) {
         const result = await models.Wallet.findOne({ where: { cpf: cpf } });
 

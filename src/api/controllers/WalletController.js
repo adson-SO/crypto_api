@@ -11,6 +11,16 @@ class WalletController {
             return next(err);
         }
     }
+
+    async findAll(req, res, next) {
+        try {
+            const result = await WalletService.findAll();
+
+            return res.status(200).json(result);
+        } catch (err) {
+            return next(err);
+        }
+    }
 }
 
 module.exports = new WalletController();

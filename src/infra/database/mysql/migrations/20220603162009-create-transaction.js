@@ -9,30 +9,34 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       value: {
+        allowNull: false,
         type: Sequelize.DOUBLE
       },
       datetime: {
-        allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        default: new Date() 
       },
       sendTo: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       receiveFrom: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       currentCotation: {
+        allowNull: false,
         type: Sequelize.DOUBLE
       },
-      coinId: {
-        type: Sequelize.INTEGER,
-        references: { model: 'coins', key: 'id' },
-        onDelete: 'CASCADE'
-      },
       walletAddress: {
+        allowNull: false,
         type: Sequelize.INTEGER,
-        references: { model: 'wallets', key: 'address' },
-        onDelete: 'CASCADE'
+        references: { model: 'wallets', key: 'address' }
+      },
+      coinId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: { model: 'coins', key: 'id' }
       }
     });
   },
