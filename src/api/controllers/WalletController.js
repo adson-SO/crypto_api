@@ -13,8 +13,17 @@ class WalletController {
     }
 
     async findAll(req, res, next) {
+        const { 
+            name,
+            cpf,
+            birthdate,
+            createdAt,
+            updatedAt,
+            coin
+         } = req.query;
+
         try {
-            const result = await WalletService.findAll();
+            const result = await WalletService.findAll(name, cpf, birthdate, createdAt, updatedAt, coin);
 
             return res.status(200).json(result);
         } catch (err) {

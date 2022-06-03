@@ -64,15 +64,15 @@ const ageValidate = (birthdate) => {
     const currentDay = currentDate.getDate();
     const birthDay = birthDate.getMonth() + 1;
 
-    if(currentYear - birthYear < 18) {
+    if (currentYear - birthYear < 18) {
         return false;
     }
 
-    if(currentYear - birthYear === 18 && currentMonth - birthMonth < 0) {
+    if (currentYear - birthYear === 18 && currentMonth - birthMonth < 0) {
         return false;
     }
 
-    if(currentMonth === birthMonth && currentDay - birthDay < 0) {
+    if (currentMonth === birthMonth && currentDay - birthDay < 0) {
         return false;
     }
 
@@ -88,8 +88,35 @@ const formatCpf = (wallet) => {
     return result;
 }
 
+const buildQueryFilter = (name, cpf, birthdate, createdAt, updatedAt, coin) => {
+    const filter = {};
+
+    if (name) {
+        Object.assign(filter, { name });
+    }
+
+    if (cpf) {
+        Object.assign(filter, { cpf });
+    }
+
+    if (birthdate) {
+        Object.assign(filter, { birthdate });
+    }
+
+    if (createdAt) {
+        Object.assign(filter, { createdAt });
+    }
+
+    if (updatedAt) {
+        Object.assign(filter, { updatedAt });
+    }
+
+    return filter;
+}
+
 module.exports = {
     cpfValidate,
     ageValidate,
-    formatCpf
+    formatCpf,
+    buildQueryFilter
 }

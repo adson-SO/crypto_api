@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
   Transaction.init({
     value: DataTypes.DOUBLE,
     datetime: {
+      allowNull: false,
       type: DataTypes.DATE,
       defaultValue: new Date()
     },

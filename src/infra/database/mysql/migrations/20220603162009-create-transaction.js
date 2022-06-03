@@ -14,7 +14,7 @@ module.exports = {
       },
       datetime: {
         type: Sequelize.DATE,
-        default: new Date() 
+        defaultValue: new Date() 
       },
       sendTo: {
         allowNull: false,

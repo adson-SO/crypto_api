@@ -7,8 +7,9 @@ class WalletRepository {
         return result;
     }
 
-    async findAll() {
+    async findAll(filter) {
         const result = await models.Wallet.findAll({
+            where: filter,
             include: { 
                 model: models.Coin, 
                 as: 'coins',
