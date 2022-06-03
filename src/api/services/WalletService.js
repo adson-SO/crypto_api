@@ -3,7 +3,7 @@ const { cpfValidate, ageValidate, formatCpf, buildQueryFilter } = require('../..
 const InvalidCpf = require('../errors/InvalidCpf');
 const DuplicatedCpf = require('../errors/DuplicatedCpf');
 const IsNotOver18 = require('../errors/isNotOver18');
-
+const NotFound = require('../errors/NotFound');
 class WalletService {
     async create(payload) {
         const { cpf, birthdate } = payload;
@@ -34,6 +34,16 @@ class WalletService {
         const filter = buildQueryFilter(name, cpf, birthdate, createdAt, updatedAt, coin);
 
         const result = await WalletRepository.findAll(filter);
+
+        return result;
+    }
+
+    async findOne(id) {
+        const result = await WalletRepository.findOne(id);
+
+        if (!result) {
+            throw new NotFound();
+        }
 
         return result;
     }

@@ -30,6 +30,18 @@ class WalletController {
             return next(err);
         }
     }
+
+    async findOne(req, res, next) {
+        const { id } = req.params;
+
+        try {
+            const result = await WalletService.findOne(id);
+
+            return res.status(200).json(result);
+        } catch (err) {
+            return next(err);
+        }
+    }
 }
 
 module.exports = new WalletController();
