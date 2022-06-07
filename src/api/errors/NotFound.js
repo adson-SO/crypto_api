@@ -1,5 +1,5 @@
 class NotFound extends Error {
-    constructor(){
+    constructor() {
         super();
         this.name = 'Not Found';
         this.description = 'Resource not found';

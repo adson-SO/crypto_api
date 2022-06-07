@@ -1,17 +1,18 @@
+const { sequelize } = require('../models');
 const models = require('../models');
 
 class WalletRepository {
     async create(payload) {
         const result = await models.Wallet.create(payload);
-        
+
         return result;
     }
 
     async findAll(filter) {
         const result = await models.Wallet.findAll({
             where: filter,
-            include: { 
-                model: models.Coin, 
+            include: {
+                model: models.Coin,
                 as: 'coins',
                 attributes: ['coin', 'fullname', 'amount'],
                 include: {

@@ -9,19 +9,13 @@ class WalletService {
         const { cpf, birthdate } = payload;
 
         const cpfIsValid = cpfValidate(cpf);
-        if(!cpfIsValid) {
-            throw new InvalidCpf(cpf);
-        }
+        if(!cpfIsValid) throw new InvalidCpf(cpf);
 
         const cpfExists = await WalletRepository.findCpf(cpf);
-        if(cpfExists) {
-            throw new DuplicatedCpf(cpf);
-        }
+        if(cpfExists) throw new DuplicatedCpf(cpf);
 
         const isOver18 = ageValidate(birthdate);
-        if(!isOver18) {
-            throw new IsNotOver18();
-        }
+        if(!isOver18) throw new IsNotOver18();
 
         const wallet = await WalletRepository.create(payload);
 
@@ -41,9 +35,7 @@ class WalletService {
     async findOne(id) {
         const result = await WalletRepository.findOne(id);
 
-        if (!result) {
-            throw new NotFound();
-        }
+        if (!result) throw new NotFound();
 
         return result;
     }
