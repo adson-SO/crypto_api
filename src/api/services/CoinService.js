@@ -9,22 +9,22 @@ class CoinService {
         const walletExists = await WalletRepository.findOne(id);
         if (!walletExists) throw new NotFound();
 
-        const { bid, name } = await getCurrencyInfo(currentCoin);
+        const { bid: currentCotation, name } = await getCurrencyInfo(currentCoin);
 
         const fullname = name.slice(name.lastIndexOf('/') + 1);
 
-        const quoteToValue = Math.abs(value) * bid;
+        const quoteToValue = Math.abs(value) * currentCotation;
 
         const coinExists = await CoinRepository.findCoin(coin, id);
 
         if (coinExists) {
-            const { amount } = coinExists;
+            const { amount, id: coinId } = coinExists;
 
             const valueToUpdate = value >= 0 ? amount + quoteToValue : amount - quoteToValue;
 
             if (valueToUpdate < 0) throw new InsufficientMoney();
 
-            await CoinRepository.updateCoin(valueToUpdate, coin, id);
+            await CoinRepository.updateCoin(valueToUpdate, coin, id, quoteToValue, currentCotation, coinId);
 
             return;
         } else {

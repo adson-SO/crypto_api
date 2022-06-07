@@ -7,12 +7,21 @@ class CoinRepository {
         return coinExists;
     }
 
-    async updateCoin(valueToUpdate, coin, id) {
+    async updateCoin(valueToUpdate, coin, id, quoteToValue, currentCotation, coinId) {
         await models.Coin.update({ amount: valueToUpdate }, {
             where: {
                 coin: coin,
                 walletAddress: id
             }
+        });
+
+        await models.Transaction.create({
+            value: quoteToValue,
+            sendTo: id,
+            receiveFrom: id,
+            currentCotation: currentCotation,
+            walletAddress: id,
+            coinId: coinId
         });
 
         return;
