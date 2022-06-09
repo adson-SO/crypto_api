@@ -55,6 +55,18 @@ class WalletController {
             return next(err);
         }
     }
+
+    async delete(req, res, next) {
+        const { id } = req.params;
+
+        try {
+            await WalletService.delete(id);
+
+            return res.status(204).end();
+        } catch (err) {
+            return next(err);
+        }
+    }
 }
 
 module.exports = new WalletController();

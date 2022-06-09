@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       Wallet.hasMany(models.Transaction, {
-        foreignKey: 'walletAddress'
+        foreignKey: 'walletAddress',
+        onDelete: 'CASCADE'
       });
     }
   }

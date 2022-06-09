@@ -47,6 +47,16 @@ class WalletService {
 
         return result;
     }
+
+    async delete(id) {
+        const wallet = await WalletRepository.findOne(id);
+
+        if (!wallet) throw new NotFound();
+
+        await WalletRepository.delete(id);
+
+        return;
+    }
 }
 
 module.exports = new WalletService();

@@ -56,6 +56,28 @@ class WalletRepository {
         return result;
     }
 
+    async delete(id) {
+        await Transaction.destroy({
+            where: {
+                walletAddress: id
+            }
+        });
+
+        await Coin.destroy({
+            where: {
+                walletAddress: id
+            }
+        });
+
+        await Wallet.destroy({
+            where: {
+                address: id
+            }
+        });
+
+        return;
+    }
+
     async findCpf(cpf) {
         const result = await Wallet.findOne({ where: { cpf: cpf } });
 
