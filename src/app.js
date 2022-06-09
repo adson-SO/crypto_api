@@ -1,6 +1,6 @@
 const express = require('express');
 const router = require('./routes');
-const errorQualifier = require('./api/middlewares/errorQualifier');
+const errorHandler = require('./api/middlewares/errorHandler');
 
 class App {
     constructor() {
@@ -19,7 +19,7 @@ class App {
     }
 
     errors() {
-        this.server.use(errorQualifier);
+        this.server.use(errorHandler);
     }
 }
 

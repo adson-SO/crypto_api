@@ -1,7 +1,9 @@
 'use strict';
+
 const {
   Model
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Wallet extends Model {
     /**
@@ -10,9 +12,19 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Wallet.hasMany(models.Coin, {
+        foreignKey: 'walletAddress',
+        as: 'coins',
+        onDelete: 'CASCADE'
+      });
+
+      Wallet.hasMany(models.Transaction, {
+        foreignKey: 'walletAddress',
+        onDelete: 'CASCADE'
+      });
     }
   }
+
   Wallet.init({
     address: {
       allowNull: false,
@@ -20,15 +32,23 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    name: DataTypes.STRING,
+    name: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
     cpf: {
+      allowNull: false,
       unique: true,
       type: DataTypes.STRING
     },
-    birthdate: DataTypes.STRING
+    birthdate: {
+      allowNull: false,
+      type: DataTypes.STRING
+    }
   }, {
     sequelize,
     modelName: 'Wallet',
   });
+  
   return Wallet;
 };

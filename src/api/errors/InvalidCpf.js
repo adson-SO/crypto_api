@@ -1,8 +1,8 @@
 class InvalidCpf extends Error {
     constructor(cpf) {
         super(cpf);
-        this.description = 'cpf';
-        this.name = `cpf ${cpf} is not valid`
+        this.description = 'CPF';
+        this.name = `The CPF ${cpf} is not valid`
     }
 }
 
