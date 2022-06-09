@@ -40,8 +40,10 @@ class WalletService {
         return result;
     }
 
-    async findTransactions(id) {
-        const result = await WalletRepository.findTransactions(id);
+    async findTransactions(id, coinFilter) {
+        const filter = coinFilter ? { walletAddress: id, coin: coinFilter } : { walletAddress: id };
+
+        const result = await WalletRepository.findTransactions(filter);
 
         return result;
     }

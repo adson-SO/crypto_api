@@ -45,9 +45,10 @@ class WalletController {
 
     async findTransactions(req, res, next) {
         const { id } = req.params;
+        const { coin: coinFilter } = req.query;
 
         try {
-            const result = await WalletService.findTransactions(id);
+            const result = await WalletService.findTransactions(id, coinFilter);
 
             return res.status(200).json(result);
         } catch (err) {

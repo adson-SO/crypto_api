@@ -42,11 +42,9 @@ class WalletRepository {
         return result;
     }
 
-    async findTransactions(id) {
+    async findTransactions(filter) {
         const result = await Coin.findAll({
-            where: {
-                walletAddress: id
-            },
+            where: filter,
             attributes: ['coin'],
             include: {
                 model: Transaction,
