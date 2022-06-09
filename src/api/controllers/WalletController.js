@@ -42,6 +42,18 @@ class WalletController {
             return next(err);
         }
     }
+
+    async findTransactions(req, res, next) {
+        const { id } = req.params;
+
+        try {
+            const result = await WalletService.findTransactions(id);
+
+            return res.status(200).json(result);
+        } catch (err) {
+            return next(err);
+        }
+    }
 }
 
 module.exports = new WalletController();

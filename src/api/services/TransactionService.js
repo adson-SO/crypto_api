@@ -1,4 +1,3 @@
-const TransactionRepository = require('../repositories/TransactionRepository');
 const WalletRepository = require('../repositories/WalletRepository');
 const CoinRepository = require('../repositories/CoinRepository');
 const NotFound = require('../errors/NotFound');

@@ -39,6 +39,12 @@ class WalletService {
 
         return result;
     }
+
+    async findTransactions(id) {
+        const result = await WalletRepository.findTransactions(id);
+
+        return result;
+    }
 }
 
 module.exports = new WalletService();

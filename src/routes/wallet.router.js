@@ -10,5 +10,6 @@ module.exports = (server, router, prefix = '/api/v1/wallet') => {
     router.get('/:id', WalletController.findOne);
     router.put('/:id', addFundsValidation, CoinController.addFunds);
     router.post('/:id/transaction', TransactionController.transferFunds);
+    router.get('/:id/transaction', WalletController.findTransactions);
     server.use(prefix, router);
 }

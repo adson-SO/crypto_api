@@ -1,22 +1,21 @@
-const { sequelize } = require('../models');
-const models = require('../models');
+const { Wallet, Coin, Transaction } = require('../models');
 
 class WalletRepository {
     async create(payload) {
-        const result = await models.Wallet.create(payload);
+        const result = await Wallet.create(payload);
 
         return result;
     }
 
     async findAll(filter) {
-        const result = await models.Wallet.findAll({
+        const result = await Wallet.findAll({
             where: filter,
             include: {
-                model: models.Coin,
+                model: Coin,
                 as: 'coins',
                 attributes: ['coin', 'fullname', 'amount'],
                 include: {
-                    model: models.Transaction,
+                    model: Transaction,
                     as: 'transactions',
                     attributes: ['value', 'datetime', 'sendTo', 'receiveFrom', 'currentCotation']
                 }
@@ -27,13 +26,13 @@ class WalletRepository {
     }
 
     async findOne(id) {
-        const result = await models.Wallet.findByPk(id, {
+        const result = await Wallet.findByPk(id, {
             include: {
-                model: models.Coin,
+                model: Coin,
                 as: 'coins',
                 attributes: ['coin', 'fullname', 'amount'],
                 include: {
-                    model: models.Transaction,
+                    model: Transaction,
                     as: 'transactions',
                     attributes: ['value', 'datetime', 'sendTo', 'receiveFrom', 'currentCotation']
                 }
@@ -43,8 +42,24 @@ class WalletRepository {
         return result;
     }
 
+    async findTransactions(id) {
+        const result = await Coin.findAll({
+            where: {
+                walletAddress: id
+            },
+            attributes: ['coin'],
+            include: {
+                model: Transaction,
+                as: 'transactions',
+                attributes: ['value', 'datetime', 'sendTo', 'receiveFrom', 'currentCotation']
+            }
+        });
+
+        return result;
+    }
+
     async findCpf(cpf) {
-        const result = await models.Wallet.findOne({ where: { cpf: cpf } });
+        const result = await Wallet.findOne({ where: { cpf: cpf } });
 
         return result;
     }
