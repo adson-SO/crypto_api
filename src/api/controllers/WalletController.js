@@ -1,10 +1,11 @@
-const WalletService = require('../services/WalletService');
+const service = require('../services/WalletService');
 
 class WalletController {
     async create(req, res, next) {
-        const payload = req.body;
+        const { name, cpf, birthdate } = req.body;
+
         try {
-            const result = await WalletService.create(payload);
+            const result = await service.create(name, cpf, birthdate);
 
             return res.status(201).json(result);
         } catch (err) {
@@ -23,7 +24,7 @@ class WalletController {
          } = req.query;
 
         try {
-            const result = await WalletService.findAll(name, cpf, birthdate, createdAt, updatedAt, coin);
+            const result = await service.findAll(name, cpf, birthdate, createdAt, updatedAt, coin);
 
             return res.status(200).json(result);
         } catch (err) {
@@ -35,7 +36,7 @@ class WalletController {
         const { id } = req.params;
 
         try {
-            const result = await WalletService.findOne(id);
+            const result = await service.findOne(id);
 
             return res.status(200).json(result);
         } catch (err) {
@@ -48,7 +49,7 @@ class WalletController {
         const { coin: coinFilter } = req.query;
 
         try {
-            const result = await WalletService.findTransactions(id, coinFilter);
+            const result = await service.findTransactions(id, coinFilter);
 
             return res.status(200).json(result);
         } catch (err) {
@@ -60,7 +61,7 @@ class WalletController {
         const { id } = req.params;
 
         try {
-            await WalletService.delete(id);
+            await service.delete(id);
 
             return res.status(204).end();
         } catch (err) {

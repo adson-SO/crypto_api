@@ -1,23 +1,21 @@
-const WalletRepository = require('../repositories/WalletRepository');
+const repository = require('../repositories/WalletRepository');
 const { cpfValidate, ageValidate, formatCpf, buildQueryFilter } = require('../../helpers');
 const InvalidCpf = require('../errors/InvalidCpf');
 const DuplicatedCpf = require('../errors/DuplicatedCpf');
 const IsNotOver18 = require('../errors/isNotOver18');
 const NotFound = require('../errors/NotFound');
 class WalletService {
-    async create(payload) {
-        const { cpf, birthdate } = payload;
-
+    async create(name, cpf, birthdate) {
         const cpfIsValid = cpfValidate(cpf);
         if(!cpfIsValid) throw new InvalidCpf(cpf);
 
-        const cpfExists = await WalletRepository.findCpf(cpf);
+        const cpfExists = await repository.findCpf(cpf);
         if(cpfExists) throw new DuplicatedCpf(cpf);
 
         const isOver18 = ageValidate(birthdate);
         if(!isOver18) throw new IsNotOver18();
 
-        const wallet = await WalletRepository.create(payload);
+        const wallet = await repository.create(name, cpf, birthdate);
 
         const result = formatCpf(wallet);
 
@@ -27,13 +25,13 @@ class WalletService {
     async findAll(name, cpf, birthdate, createdAt, updatedAt, coin) {
         const filter = buildQueryFilter(name, cpf, birthdate, createdAt, updatedAt, coin);
 
-        const result = await WalletRepository.findAll(filter);
+        const result = await repository.findAll(filter);
 
         return result;
     }
 
     async findOne(id) {
-        const result = await WalletRepository.findOne(id);
+        const result = await repository.findOne(id);
 
         if (!result) throw new NotFound();
 
@@ -43,17 +41,17 @@ class WalletService {
     async findTransactions(id, coinFilter) {
         const filter = coinFilter ? { walletAddress: id, coin: coinFilter } : { walletAddress: id };
 
-        const result = await WalletRepository.findTransactions(filter);
+        const result = await repository.findTransactions(filter);
 
         return result;
     }
 
     async delete(id) {
-        const wallet = await WalletRepository.findOne(id);
+        const wallet = await repository.findOne(id);
 
         if (!wallet) throw new NotFound();
 
-        await WalletRepository.delete(id);
+        await repository.delete(id);
 
         return;
     }

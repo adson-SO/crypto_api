@@ -1,8 +1,8 @@
 const { Wallet, Coin, Transaction } = require('../models');
 
 class WalletRepository {
-    async create(payload) {
-        const result = await Wallet.create(payload);
+    async create(name, cpf, birthdate) {
+        const result = await Wallet.create({ name, cpf, birthdate });
 
         return result;
     }
