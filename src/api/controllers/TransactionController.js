@@ -1,16 +1,22 @@
-const TransactionService = require('../services/TransactionService');
+const transactionService = require('../services/TransactionService');
 
 class TransactionController {
     async transferFunds(req, res, next) {
-        const { id: address } = req.params;
+        const { id: senderAddress } = req.params;
         const { receiverAddress, quoteTo, currentCoin, value } = req.body;
 
         try {
-            await TransactionService.transferFunds(address, receiverAddress, quoteTo, currentCoin, value);
+            const transaction = await transactionService.transferFunds(senderAddress, receiverAddress, quoteTo, currentCoin, value);
 
-            return res.status(200).json({
-                message: 'Transaction succeeded'
-            });
+            const result = {
+                value: transaction.value,
+                datetime: transaction.datetime,
+                sendTo: transaction.sendTo,
+                reeiveFrom: transaction.receiveFrom,
+                currentCotation: transaction.currentCotation
+            };
+
+            return res.status(200).json(result);
         } catch (err) {
             return next(err);
         }
