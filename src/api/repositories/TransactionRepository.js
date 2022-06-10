@@ -41,7 +41,7 @@ class TransactionRepository {
         }
     }
 
-    async createCoin(valueToUpdateSender, currentCoin, senderAddress, quoteTo, fullname, amount, receiverAddress, value, currentCotation) {
+    async createCoin(valueToUpdateSender, currentCoin, senderAddress, quoteTo, fullname, amount, receiverAddress, value, currentCotation, coinId) {
         try {
             const result = await sequelize.transaction(async (t) => {
                 await Coin.update({ amount: valueToUpdateSender }, {
@@ -67,7 +67,7 @@ class TransactionRepository {
                     sendTo: receiverAddress,
                     receiveFrom: senderAddress,
                     currentCotation: currentCotation,
-                    coinId: coin.id,
+                    coinId: coinId,
                     walletAddress: senderAddress
                 },
                 {

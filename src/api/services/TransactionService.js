@@ -52,7 +52,8 @@ class TransactionService {
                 quoteToValue,
                 receiverAddress,
                 value,
-                currentCotation
+                currentCotation,
+                coinExists.id
             );
 
             return result;

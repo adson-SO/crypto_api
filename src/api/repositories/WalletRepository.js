@@ -1,4 +1,4 @@
-const { Wallet, Coin, Transaction } = require('../models');
+const { Wallet, Coin, Transaction, sequelize } = require('../models');
 
 class WalletRepository {
     async create(name, cpf, birthdate) {
@@ -43,25 +43,36 @@ class WalletRepository {
     }
 
     async delete(id) {
-        await Transaction.destroy({
-            where: {
-                walletAddress: id
-            }
-        });
+        try {
+            await sequelize.transaction(async (t) => {
+                await Transaction.destroy({
+                    where: {
+                        walletAddress: id
+                    },
+                    transaction: t
+                });
+        
+                await Coin.destroy({
+                    where: {
+                        walletAddress: id
+                    },
+                    transaction: t
+                });
+        
+                await Wallet.destroy({
+                    where: {
+                        address: id
+                    },
+                    transaction: t
+                });
 
-        await Coin.destroy({
-            where: {
-                walletAddress: id
-            }
-        });
+                return;
+            });
 
-        await Wallet.destroy({
-            where: {
-                address: id
-            }
-        });
-
-        return;
+            return;
+        } catch (err) {
+            throw err;
+        }
     }
 
     async findCpf(cpf) {
