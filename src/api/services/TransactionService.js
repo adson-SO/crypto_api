@@ -7,8 +7,6 @@ const { getCurrencyInfo } = require('../repositories/CurrencyApiRepository');
 
 class TransactionService {
     async transferFunds(senderAddress, receiverAddress, quoteTo, currentCoin, value) {
-        if (value < 0) throw new InvalidField('value');
-
         const walletExists = await walletRepository.findOne(senderAddress);
         const wallet2Exists = await walletRepository.findOne(receiverAddress);
 
