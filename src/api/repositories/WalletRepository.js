@@ -1,15 +1,15 @@
-const { Wallet, Coin, Transaction } = require('../models');
+const { Wallet, Coin, Transaction, sequelize } = require('../models');
 
 class WalletRepository {
-    async create(payload) {
-        const result = await Wallet.create(payload);
+    async create(name, cpf, birthdate) {
+        const result = await Wallet.create({ name, cpf, birthdate });
 
         return result;
     }
 
-    async findAll(filter) {
+    async findAll(walletFilter) {
         const result = await Wallet.findAll({
-            where: filter,
+            where: walletFilter,
             include: {
                 model: Coin,
                 as: 'coins',
@@ -42,40 +42,37 @@ class WalletRepository {
         return result;
     }
 
-    async findTransactions(filter) {
-        const result = await Coin.findAll({
-            where: filter,
-            attributes: ['coin'],
-            include: {
-                model: Transaction,
-                as: 'transactions',
-                attributes: ['value', 'datetime', 'sendTo', 'receiveFrom', 'currentCotation']
-            }
-        });
-
-        return result;
-    }
-
     async delete(id) {
-        await Transaction.destroy({
-            where: {
-                walletAddress: id
-            }
-        });
+        try {
+            await sequelize.transaction(async (t) => {
+                await Transaction.destroy({
+                    where: {
+                        walletAddress: id
+                    },
+                    transaction: t
+                });
+        
+                await Coin.destroy({
+                    where: {
+                        walletAddress: id
+                    },
+                    transaction: t
+                });
+        
+                await Wallet.destroy({
+                    where: {
+                        address: id
+                    },
+                    transaction: t
+                });
 
-        await Coin.destroy({
-            where: {
-                walletAddress: id
-            }
-        });
+                return;
+            });
 
-        await Wallet.destroy({
-            where: {
-                address: id
-            }
-        });
-
-        return;
+            return;
+        } catch (err) {
+            throw err;
+        }
     }
 
     async findCpf(cpf) {

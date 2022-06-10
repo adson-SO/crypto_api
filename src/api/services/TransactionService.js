@@ -1,47 +1,71 @@
-const WalletRepository = require('../repositories/WalletRepository');
-const CoinRepository = require('../repositories/CoinRepository');
+const walletRepository = require('../repositories/WalletRepository');
+const coinRepository = require('../repositories/CoinRepository');
+const transactionRepository = require('../repositories/TransactionRepository');
 const NotFound = require('../errors/NotFound');
 const InvalidField = require('../errors/InvalidField');
-const { getCurrencyInfo } = require('../repositories/CoinApiRepository');
+const { getCurrencyInfo } = require('../repositories/CurrencyApiRepository');
 
 class TransactionService {
-    async transferFunds(address, receiverAddress, quoteTo, currentCoin, value) {
-        if (value < 0) throw new InvalidField('value');
-
-        const walletExists = await WalletRepository.findOne(address);
-        const wallet2Exists = await WalletRepository.findOne(receiverAddress);
+    async transferFunds(senderAddress, receiverAddress, quoteTo, currentCoin, value) {
+        const walletExists = await walletRepository.findOne(senderAddress);
+        const wallet2Exists = await walletRepository.findOne(receiverAddress);
 
         if (!walletExists || !wallet2Exists) throw new NotFound();
 
-        const coinExists = await CoinRepository.findCoin(currentCoin, address);
+        const coinExists = await coinRepository.find(currentCoin, senderAddress);
         if (!coinExists) throw new NotFound();
 
         if (value > coinExists.amount) throw new InvalidField('value');
 
-        const valueToSubtract = coinExists.amount - value;
+        const valueToUpdateSender = coinExists.amount - value;
 
         const { bid: currentCotation, name } = await getCurrencyInfo(currentCoin);
 
         const quoteToValue = value * currentCotation;
         const fullname = name.slice(name.lastIndexOf('/') + 1);
 
-        await CoinRepository.updateCoin(valueToSubtract, currentCoin, address, quoteToValue, currentCotation, coinExists.id);
-
-        const coin2Exists = await CoinRepository.findCoin(quoteTo, receiverAddress);
+        const coin2Exists = await coinRepository.find(quoteTo, receiverAddress);
         
         if (coin2Exists) {
-            const { amount, id: coinId } = coin2Exists;
+            const { amount } = coin2Exists;
 
-            const valueToUpdate = amount + quoteToValue;
+            const valueToUpdateReceiver = amount + quoteToValue;
 
-            await CoinRepository.updateCoin(valueToUpdate, quoteTo, receiverAddress, quoteToValue, currentCotation, coinId);
+            const result = await transactionRepository.updateCoin(
+                valueToUpdateSender, 
+                currentCoin, 
+                senderAddress, 
+                valueToUpdateReceiver, 
+                quoteTo, receiverAddress, 
+                value, currentCotation, 
+                coinExists.id
+            );
 
-            return;
+            return result;
         } else {
-            await CoinRepository.create(quoteTo, fullname, quoteToValue, receiverAddress);
+            const result = await transactionRepository.createCoin(
+                valueToUpdateSender, 
+                currentCoin, 
+                senderAddress,
+                quoteTo,
+                fullname,
+                quoteToValue,
+                receiverAddress,
+                value,
+                currentCotation,
+                coinExists.id
+            );
 
-            return;
+            return result;
         }
+    }
+
+    async findTransactions(id, coinFilter) {
+        const filter = coinFilter ? { walletAddress: id, coin: coinFilter } : { walletAddress: id };
+
+        const result = await transactionRepository.findTransactions(filter);
+
+        return result;
     }
 }
 

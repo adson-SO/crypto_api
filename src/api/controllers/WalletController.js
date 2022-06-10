@@ -1,10 +1,11 @@
-const WalletService = require('../services/WalletService');
+const service = require('../services/WalletService');
 
 class WalletController {
     async create(req, res, next) {
-        const payload = req.body;
+        const { name, cpf, birthdate } = req.body;
+
         try {
-            const result = await WalletService.create(payload);
+            const result = await service.create(name, cpf, birthdate);
 
             return res.status(201).json(result);
         } catch (err) {
@@ -13,17 +14,16 @@ class WalletController {
     }
 
     async findAll(req, res, next) {
-        const { 
+        const {
             name,
             cpf,
             birthdate,
             createdAt,
-            updatedAt,
-            coin
-         } = req.query;
+            updatedAt
+        } = req.query;
 
         try {
-            const result = await WalletService.findAll(name, cpf, birthdate, createdAt, updatedAt, coin);
+            const result = await service.findAll(name, cpf, birthdate, createdAt, updatedAt);
 
             return res.status(200).json(result);
         } catch (err) {
@@ -35,7 +35,7 @@ class WalletController {
         const { id } = req.params;
 
         try {
-            const result = await WalletService.findOne(id);
+            const result = await service.findOne(id);
 
             return res.status(200).json(result);
         } catch (err) {
@@ -43,12 +43,20 @@ class WalletController {
         }
     }
 
-    async findTransactions(req, res, next) {
+    async addFunds(req, res, next) {
         const { id } = req.params;
-        const { coin: coinFilter } = req.query;
+        const { quoteTo: coin, currentCoin, value } = req.body;
 
         try {
-            const result = await WalletService.findTransactions(id, coinFilter);
+            const transaction = await service.addFunds(id, coin, currentCoin, value);
+
+            const result = {
+                value: transaction.value,
+                datetime: transaction.datetime,
+                sendTo: transaction.sendTo,
+                receiveFrom: transaction.receiveFrom,
+                currentCotation: transaction.currentCotation
+            }
 
             return res.status(200).json(result);
         } catch (err) {
@@ -60,7 +68,7 @@ class WalletController {
         const { id } = req.params;
 
         try {
-            await WalletService.delete(id);
+            await service.delete(id);
 
             return res.status(204).end();
         } catch (err) {

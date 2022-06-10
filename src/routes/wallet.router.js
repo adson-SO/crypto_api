@@ -1,16 +1,16 @@
-const WalletController = require('../api/controllers/WalletController');
-const CoinController = require('../api/controllers/CoinController');
-const TransactionController = require('../api/controllers/TransactionController');
-const createValidation = require('../api/validations/wallet/create');
-const addFundsValidation = require('../api/validations/coin/addFunds');
+const walletController = require('../api/controllers/WalletController');
+const transactionController = require('../api/controllers/TransactionController');
+const createValidation = require('../api/validations/createWallet');
+const addFundsValidation = require('../api/validations/addFunds');
+const transferFundsValidation = require('../api/validations/transferFunds');
 
 module.exports = (server, router, prefix = '/api/v1/wallet') => {
-    router.post('/', createValidation, WalletController.create);
-    router.get('/', WalletController.findAll);
-    router.get('/:id', WalletController.findOne);
-    router.put('/:id', addFundsValidation, CoinController.addFunds);
-    router.post('/:id/transaction', TransactionController.transferFunds);
-    router.get('/:id/transaction', WalletController.findTransactions);
-    router.delete('/:id', WalletController.delete);
+    router.post('/', createValidation, walletController.create);
+    router.get('/', walletController.findAll);
+    router.get('/:id', walletController.findOne);
+    router.put('/:id', addFundsValidation, walletController.addFunds);
+    router.post('/:id/transaction', transferFundsValidation, transactionController.transferFunds);
+    router.get('/:id/transaction', transactionController.findTransactions);
+    router.delete('/:id', walletController.delete);
     server.use(prefix, router);
 }

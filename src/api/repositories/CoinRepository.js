@@ -1,41 +1,75 @@
-const models = require('../models');
-
+const { Coin, Transaction, sequelize } = require('../models');
 class CoinRepository {
-    async findCoin(coin, id) {
-        const coinExists = await models.Coin.findOne({ where: { coin: coin, walletAddress: id } });
+    async find(coin, id) {
+        const coinExists = await Coin.findOne({ where: { coin: coin, walletAddress: id } });
 
         return coinExists;
     }
 
-    async updateCoin(valueToUpdate, coin, id, quoteToValue, currentCotation, coinId) {
-        await models.Coin.update({ amount: valueToUpdate }, {
-            where: {
-                coin: coin,
-                walletAddress: id
-            }
-        });
+    async update(valueToUpdate, coin, id, quoteToValue, currentCotation, coinId) {
+        try {
+            const result = await sequelize.transaction(async (t) => {
+                await Coin.update({ amount: valueToUpdate }, {
+                    where: {
+                        coin: coin,
+                        walletAddress: id
+                    },
+                    transaction: t
+                });
+        
+                const transaction = await Transaction.create({
+                    value: quoteToValue,
+                    sendTo: id,
+                    receiveFrom: id,
+                    currentCotation: currentCotation,
+                    walletAddress: id,
+                    coinId: coinId
+                },
+                {
+                    transaction: t
+                });
+        
+                return transaction;
+            });
 
-        await models.Transaction.create({
-            value: quoteToValue,
-            sendTo: id,
-            receiveFrom: id,
-            currentCotation: currentCotation,
-            walletAddress: id,
-            coinId: coinId
-        });
-
-        return;
+            return result;
+        } catch (err) {
+            return err;
+        }
     }
 
-    async create(coin, fullname, quoteToValue, id) {
-        await models.Coin.create({
-            coin: coin,
-            fullname: fullname,
-            amount: quoteToValue,
-            walletAddress: id
-        });
+    async create(coinName, fullname, quoteToValue, id, currentCotation) {
+        try {
+            const result = await sequelize.transaction(async (t) => {
+                const coin = await Coin.create({
+                    coin: coinName,
+                    fullname: fullname,
+                    amount: quoteToValue,
+                    walletAddress: id
+                },
+                {
+                    transaction: t
+                });
 
-        return;
+                const transaction = await Transaction.create({
+                    value: quoteToValue,
+                    sendTo: id,
+                    receiveFrom: id,
+                    currentCotation: currentCotation,
+                    walletAddress: id,
+                    coinId: coin.id
+                },
+                {
+                    transaction: t
+                });
+
+                return transaction;
+            });
+
+            return result;
+        } catch (err) {
+            return err;
+        }
     }
 }
 

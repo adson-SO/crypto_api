@@ -88,30 +88,30 @@ const formatCpf = (wallet) => {
     return result;
 }
 
-const buildQueryFilter = (name, cpf, birthdate, createdAt, updatedAt, coin) => {
-    const filter = {};
+const buildQueryFilter = (name, cpf, birthdate, createdAt, updatedAt) => {
+    const walletFilter = {};
 
     if (name) {
-        Object.assign(filter, { name });
+        Object.assign(walletFilter, { name });
     }
 
     if (cpf) {
-        Object.assign(filter, { cpf });
+        Object.assign(walletFilter, { cpf });
     }
 
     if (birthdate) {
-        Object.assign(filter, { birthdate });
+        Object.assign(walletFilter, { birthdate });
     }
 
     if (createdAt) {
-        Object.assign(filter, { createdAt });
+        Object.assign(walletFilter, { createdAt });
     }
 
     if (updatedAt) {
-        Object.assign(filter, { updatedAt });
+        Object.assign(walletFilter, { updatedAt });
     }
 
-    return filter;
+    return walletFilter;
 }
 
 module.exports = {
