@@ -43,6 +43,27 @@ class WalletController {
         }
     }
 
+    async addFunds(req, res, next) {
+        const { id } = req.params;
+        const { quoteTo: coin, currentCoin, value } = req.body;
+
+        try {
+            const transaction = await service.addFunds(id, coin, currentCoin, value);
+
+            const result = {
+                value: transaction.value,
+                datetime: transaction.datetime,
+                sendTo: transaction.sendTo,
+                receiveFrom: transaction.receiveFrom,
+                currentCotation: transaction.currentCotation
+            }
+
+            return res.status(200).json(result);
+        } catch (err) {
+            return next(err);
+        }
+    }
+
     async findTransactions(req, res, next) {
         const { id } = req.params;
         const { coin: coinFilter } = req.query;

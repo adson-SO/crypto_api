@@ -2,7 +2,7 @@ const WalletRepository = require('../repositories/WalletRepository');
 const CoinRepository = require('../repositories/CoinRepository');
 const NotFound = require('../errors/NotFound');
 const InvalidField = require('../errors/InvalidField');
-const { getCurrencyInfo } = require('../repositories/CoinApiRepository');
+const { getCurrencyInfo } = require('../repositories/CurrencyApiRepository');
 
 class TransactionService {
     async transferFunds(address, receiverAddress, quoteTo, currentCoin, value) {
