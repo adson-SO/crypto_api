@@ -31,9 +31,11 @@ class WalletService {
     }
 
     async findOne(id) {
-        const result = await repository.findOne(id);
+        const wallet = await repository.findOne(id);
 
-        if (!result) throw new NotFound();
+        if (!wallet) throw new NotFound();
+
+        const result = formatCpf(wallet);
 
         return result;
     }
