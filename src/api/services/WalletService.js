@@ -22,10 +22,10 @@ class WalletService {
         return result;
     }
 
-    async findAll(name, cpf, birthdate, createdAt, updatedAt, coin) {
-        const filter = buildQueryFilter(name, cpf, birthdate, createdAt, updatedAt, coin);
+    async findAll(name, cpf, birthdate, createdAt, updatedAt) {
+        const walletFilter = buildQueryFilter(name, cpf, birthdate, createdAt, updatedAt);
 
-        const result = await repository.findAll(filter);
+        const result = await repository.findAll(walletFilter);
 
         return result;
     }

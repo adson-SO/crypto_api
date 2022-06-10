@@ -1,8 +1,8 @@
 const WalletController = require('../api/controllers/WalletController');
 const CoinController = require('../api/controllers/CoinController');
 const TransactionController = require('../api/controllers/TransactionController');
-const createValidation = require('../api/validations/wallet/create');
-const addFundsValidation = require('../api/validations/coin/addFunds');
+const createValidation = require('../api/validations/createWallet');
+const addFundsValidation = require('../api/validations/addFunds');
 
 module.exports = (server, router, prefix = '/api/v1/wallet') => {
     router.post('/', createValidation, WalletController.create);
