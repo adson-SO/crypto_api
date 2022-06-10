@@ -42,20 +42,6 @@ class WalletRepository {
         return result;
     }
 
-    async findTransactions(filter) {
-        const result = await Coin.findAll({
-            where: filter,
-            attributes: ['coin'],
-            include: {
-                model: Transaction,
-                as: 'transactions',
-                attributes: ['value', 'datetime', 'sendTo', 'receiveFrom', 'currentCotation']
-            }
-        });
-
-        return result;
-    }
-
     async delete(id) {
         await Transaction.destroy({
             where: {

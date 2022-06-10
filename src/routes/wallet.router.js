@@ -10,7 +10,7 @@ module.exports = (server, router, prefix = '/api/v1/wallet') => {
     router.get('/:id', walletController.findOne);
     router.put('/:id', addFundsValidation, walletController.addFunds);
     router.post('/:id/transaction', transferFundsValidation, transactionController.transferFunds);
-    router.get('/:id/transaction', walletController.findTransactions);
+    router.get('/:id/transaction', transactionController.findTransactions);
     router.delete('/:id', walletController.delete);
     server.use(prefix, router);
 }

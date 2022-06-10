@@ -72,14 +72,6 @@ class WalletService {
         }
     }
 
-    async findTransactions(id, coinFilter) {
-        const filter = coinFilter ? { walletAddress: id, coin: coinFilter } : { walletAddress: id };
-
-        const result = await walletRepository.findTransactions(filter);
-
-        return result;
-    }
-
     async delete(id) {
         const wallet = await walletRepository.findOne(id);
 

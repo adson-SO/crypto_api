@@ -58,6 +58,14 @@ class TransactionService {
             return result;
         }
     }
+
+    async findTransactions(id, coinFilter) {
+        const filter = coinFilter ? { walletAddress: id, coin: coinFilter } : { walletAddress: id };
+
+        const result = await transactionRepository.findTransactions(filter);
+
+        return result;
+    }
 }
 
 module.exports = new TransactionService();

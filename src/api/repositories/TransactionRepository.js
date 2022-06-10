@@ -82,6 +82,20 @@ class TransactionRepository {
             return err;
         }
     }
+
+    async findTransactions(filter) {
+        const result = await Coin.findAll({
+            where: filter,
+            attributes: ['coin'],
+            include: {
+                model: Transaction,
+                as: 'transactions',
+                attributes: ['value', 'datetime', 'sendTo', 'receiveFrom', 'currentCotation']
+            }
+        });
+
+        return result;
+    }
 }
 
 module.exports = new TransactionRepository();
