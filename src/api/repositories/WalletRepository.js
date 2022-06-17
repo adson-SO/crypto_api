@@ -1,8 +1,8 @@
 const { Wallet, Coin, Transaction, sequelize } = require('../models');
 
 class WalletRepository {
-    async create(name, cpf, birthdate) {
-        const result = await Wallet.create({ name, cpf, birthdate });
+    async create(name, cpf, birthdate, email, password) {
+        const result = await Wallet.create({ name, cpf, birthdate, email, password });
 
         return result;
     }
@@ -75,8 +75,8 @@ class WalletRepository {
         }
     }
 
-    async findCpf(cpf) {
-        const result = await Wallet.findOne({ where: { cpf: cpf } });
+    async find(searchObj) {
+        const result = await Wallet.findOne({ where: searchObj });
 
         return result;
     }
