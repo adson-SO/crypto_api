@@ -7,7 +7,7 @@ class AuthController {
         try {
             const { user, token } = await authService.login(email, password);
 
-            return res.status(200).json({ user, token });
+            return res.setHeader('Token', token).status(200).json({ user, token });
         } catch (err) {
             return next(err);
         }

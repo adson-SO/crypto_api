@@ -9,7 +9,7 @@ class AuthService {
 
         if (!user) throw new NotFound();
 
-        const token = jwt.sign({ email, password }, process.env.AUTH_SECRET, {
+        const token = jwt.sign({ email }, process.env.AUTH_SECRET, {
             expiresIn: '24h'
         });
 
