@@ -5,20 +5,24 @@ const InvalidCpf = require('../errors/InvalidCpf');
 const DuplicatedCpf = require('../errors/DuplicatedCpf');
 const IsNotOver18 = require('../errors/isNotOver18');
 const NotFound = require('../errors/NotFound');
+const EmailAlreadyExists = require('../errors/EmailAlreadyExists');
 const InsufficientMoney = require('../errors/InsufficientMoney');
 const { getCurrencyInfo } = require('../repositories/CurrencyApiRepository');
 class WalletService {
-    async create(name, cpf, birthdate) {
+    async create(name, cpf, birthdate, email, password) {
         const cpfIsValid = cpfValidate(cpf);
         if(!cpfIsValid) throw new InvalidCpf(cpf);
 
-        const cpfExists = await walletRepository.findCpf(cpf);
+        const cpfExists = await walletRepository.find({ cpf });
         if(cpfExists) throw new DuplicatedCpf(cpf);
 
         const isOver18 = ageValidate(birthdate);
         if(!isOver18) throw new IsNotOver18();
 
-        const wallet = await walletRepository.create(name, cpf, birthdate);
+        const emailExists = await walletRepository.find({ email });
+        if (emailExists) throw new EmailAlreadyExists(email);
+
+        const wallet = await walletRepository.create(name, cpf, birthdate, email, password);
 
         const result = formatCpf(wallet);
 

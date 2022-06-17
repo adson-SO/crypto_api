@@ -44,10 +44,21 @@ module.exports = (sequelize, DataTypes) => {
     birthdate: {
       allowNull: false,
       type: DataTypes.STRING
+    },
+    email: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+    password: {
+      allowNull: false,
+      type: DataTypes.STRING
     }
   }, {
     sequelize,
     modelName: 'Wallet',
+    defaultScope: {
+      attributes: { exclude: ['password'] }
+    }
   });
   
   return Wallet;
