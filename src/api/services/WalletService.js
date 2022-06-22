@@ -8,6 +8,7 @@ const NotFound = require('../errors/NotFound');
 const EmailAlreadyExists = require('../errors/EmailAlreadyExists');
 const InsufficientMoney = require('../errors/InsufficientMoney');
 const { getCurrencyInfo } = require('../repositories/CurrencyApiRepository');
+const authService = require('../services/AuthService');
 class WalletService {
     async create(name, cpf, birthdate, email, password) {
         const cpfIsValid = cpfValidate(cpf);
@@ -22,11 +23,13 @@ class WalletService {
         const emailExists = await walletRepository.find({ email });
         if (emailExists) throw new EmailAlreadyExists(email);
 
-        const wallet = await walletRepository.create(name, cpf, birthdate, email, password);
+        await walletRepository.create(name, cpf, birthdate, email, password);
 
-        const result = formatCpf(wallet);
+        const { user, token } = await authService.login(email, password);
 
-        return result;
+        const result = formatCpf(user);
+
+        return { result, token };
     }
 
     async findAll(name, cpf, birthdate, createdAt, updatedAt) {

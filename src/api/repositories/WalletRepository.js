@@ -2,9 +2,9 @@ const { Wallet, Coin, Transaction, sequelize } = require('../models');
 
 class WalletRepository {
     async create(name, cpf, birthdate, email, password) {
-        const result = await Wallet.create({ name, cpf, birthdate, email, password });
+        await Wallet.create({ name, cpf, birthdate, email, password });
 
-        return result;
+        return;
     }
 
     async findAll(walletFilter) {
