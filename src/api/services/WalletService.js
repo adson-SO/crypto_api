@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const walletRepository = require('../repositories/WalletRepository');
 const coinRepository = require('../repositories/CoinRepository');
 const { cpfValidate, ageValidate, formatCpf, buildQueryFilter } = require('../../helpers');
@@ -23,9 +24,11 @@ class WalletService {
         const emailExists = await walletRepository.find({ email });
         if (emailExists) throw new EmailAlreadyExists(email);
 
-        await walletRepository.create(name, cpf, birthdate, email, password);
+        const hashPassword = bcrypt.hashSync(password, 10);
 
-        const { user, token } = await authService.login(email, password);
+        await walletRepository.create(name, cpf, birthdate, email, hashPassword);
+
+        const { user, token } = await authService.login(email, hashPassword);
 
         const result = formatCpf(user);
 
