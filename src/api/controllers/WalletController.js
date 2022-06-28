@@ -5,16 +5,19 @@ class WalletController {
         const { name, cpf, birthdate, email, password } = req.body;
 
         try {
-            const result = await service.create(name, cpf, birthdate, email, password);
+            const { result, token } = await service.create(name, cpf, birthdate, email, password);
 
             return res.status(201).json({
-                address: result.address,
-                name: result.name,
-                cpf: result.cpf,
-                birthdate: result.birthdate,
-                email: result.email,
-                updatedAt: result.updatedAt,
-                createdAt: result.createdAt
+                user: {
+                    address: result.address,
+                    name: result.name,
+                    cpf: result.cpf,
+                    birthdate: result.birthdate,
+                    email: result.email,
+                    updatedAt: result.updatedAt,
+                    createdAt: result.createdAt
+                },
+                token: token
             });
         } catch (err) {
             return next(err);

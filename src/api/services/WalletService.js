@@ -1,32 +1,37 @@
+const bcrypt = require('bcrypt');
 const walletRepository = require('../repositories/WalletRepository');
 const coinRepository = require('../repositories/CoinRepository');
 const { cpfValidate, ageValidate, formatCpf, buildQueryFilter } = require('../../helpers');
-const InvalidCpf = require('../errors/InvalidCpf');
-const DuplicatedCpf = require('../errors/DuplicatedCpf');
+const AlreadyExistsError = require('../errors/AlreadyExistsError');
+const InvalidField = require('../errors/InvalidField');
 const IsNotOver18 = require('../errors/isNotOver18');
 const NotFound = require('../errors/NotFound');
-const EmailAlreadyExists = require('../errors/EmailAlreadyExists');
 const InsufficientMoney = require('../errors/InsufficientMoney');
 const { getCurrencyInfo } = require('../repositories/CurrencyApiRepository');
+const authService = require('../services/AuthService');
 class WalletService {
     async create(name, cpf, birthdate, email, password) {
         const cpfIsValid = cpfValidate(cpf);
-        if(!cpfIsValid) throw new InvalidCpf(cpf);
+        if(!cpfIsValid) throw new InvalidField('cpf');
 
         const cpfExists = await walletRepository.find({ cpf });
-        if(cpfExists) throw new DuplicatedCpf(cpf);
+        if(cpfExists) throw new AlreadyExistsError('cpf');
 
         const isOver18 = ageValidate(birthdate);
         if(!isOver18) throw new IsNotOver18();
 
         const emailExists = await walletRepository.find({ email });
-        if (emailExists) throw new EmailAlreadyExists(email);
+        if (emailExists) throw new AlreadyExistsError('email');
 
-        const wallet = await walletRepository.create(name, cpf, birthdate, email, password);
+        const hashPassword = bcrypt.hashSync(password, 10);
 
-        const result = formatCpf(wallet);
+        await walletRepository.create(name, cpf, birthdate, email, hashPassword);
 
-        return result;
+        const { user, token } = await authService.login(email, hashPassword);
+
+        const result = formatCpf(user);
+
+        return { result, token };
     }
 
     async findAll(name, cpf, birthdate, createdAt, updatedAt) {

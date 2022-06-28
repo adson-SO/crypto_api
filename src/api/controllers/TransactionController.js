@@ -12,7 +12,7 @@ class TransactionController {
                 value: transaction.value,
                 datetime: transaction.datetime,
                 sendTo: transaction.sendTo,
-                reeiveFrom: transaction.receiveFrom,
+                receiveFrom: transaction.receiveFrom,
                 currentCotation: transaction.currentCotation
             };
 
