@@ -243,3 +243,59 @@ Exemplo de resposta:
 > DELETE - `http://localhost:3000/api/v1/wallet/:id`
 
 Se a operação for bem sucedida a resposta será um status 204 com corpo vazio.
+
+### Realizar uma transação para outra carteira
+> POST - `http://localhost:3000/api/v1/wallet/:id/transaction`
+
+Exemplo de payload:
+```json
+{
+    "receiverAddress": 1,
+    "quoteTo": "BRL",
+    "currentCoin": "BTC",
+    "value": 0.1
+}
+```
+
+Exemplo de resposta:
+```json
+{
+    "value": 0.1,
+    "datetime": "2022-06-28T17:22:39.335Z",
+    "sendTo": 1,
+    "reeiveFrom": "2",
+    "currentCotation": "108.835"
+}
+```
+
+### Listar todas as transações de uma carteira
+> GET - `http://localhost:3000/api/v1/wallet/:id/transaction`
+
+Exemplo de resposta:
+```json
+[
+    {
+        "coin": "BTC",
+        "transactions": [
+            {
+                "value": 0.1,
+                "datetime": "2022-06-28T17:22:39.000Z",
+                "sendTo": 1,
+                "receiveFrom": 2,
+                "currentCotation": 108.835
+            }
+        ]
+    },
+    {
+        "coin": "BRL",
+        "transactions": []
+    }
+]
+```
+
+Este endpoint também permite a busca por uma moeda específica através de query params.
+
+Exemplo de busca por query params:
+```bash
+http://localhost:3000/api/v1/wallet/:id/transaction?coin=BTC
+```
